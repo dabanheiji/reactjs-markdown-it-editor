@@ -1,0 +1,25 @@
+{
+  "name": "react-markdown-editor",
+  "version": "1.0.0",
+  "main": "es/index.js",
+  "repository": "git@github.com:dabanheiji/react-markdown-editor.git",
+  "author": "changpengyuan <pengyuan.chang@sotos.com.cn>",
+  "license": "MIT",
+  "scripts": {
+    "build": "yarn run rollup -c",
+    "start": "yarn run rollup -c -w"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.14.6",
+    "@babel/preset-env": "^7.14.5",
+    "@babel/preset-react": "^7.14.5",
+    "@babel/preset-typescript": "^7.14.5",
+    "@types/node": "^15.12.2",
+    "@types/react": "^17.0.11",
+    "react": "^17.0.2",
+    "rollup": "^2.51.2",
+    "rollup-plugin-babel": "^4.4.0",
+    "rollup-plugin-typescript2": "^0.30.0",
+    "typescript": "^4.3.2"
+  }
+}
