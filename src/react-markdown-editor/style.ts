@@ -43,6 +43,7 @@ export const MarkdownEditContainer = styled.div`
             height: 100%;
             padding: 20px;
             box-sizing: border-box;
+            overflow: scroll;
         }
     }
 `
@@ -55,4 +56,8 @@ export const NavBarContainer = styled.nav`
     display: flex;
     align-items: center;
     padding: 0 20px;
+    .item{
+        font-size: 24px;
+        color: #ccc;
+    }
 `

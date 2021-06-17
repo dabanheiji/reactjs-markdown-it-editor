@@ -1,11 +1,22 @@
 import React, { FC, ReactElement, useCallback, useState, useEffect } from 'react'
 import { NavBarContainer } from './style'
-import { message } from 'antd'
+import {
+    BoldOutlined
+} from '@ant-design/icons'
+import { message, Tooltip } from 'antd'
+import {
+    handleText
+} from './utils'
+import { IProps } from './type'
 
 const codeThemeList = ['default','hybrid', 'dark', 'github', 'atelier-lakeside-dark', 'color-brewer', 'docco', 'mono-blue', 'paraiso-dark']
 const markdownThemeList = ['maize', 'guthub']
 
-const NavBar: FC = (): ReactElement => {
+const NavBar: FC<IProps> = ({
+    value,
+    setValue,
+    editorElement
+}): ReactElement => {
     
     const [codeTheme, setCodeTheme] = useState<string>('hybrid')
     const [markdownTheme, setMarkdownTheme] = useState<string>('guthub')
@@ -52,7 +63,10 @@ const NavBar: FC = (): ReactElement => {
 
     return (
         <NavBarContainer>
-            navbar
+            <Tooltip title="加粗">
+                <BoldOutlined className="item" onClick={()=>handleText(editorElement, '**', '加粗文本', setValue)} />
+            </Tooltip>
+            
         </NavBarContainer>
     )
 }

@@ -19,7 +19,6 @@ const MarkdownEditor: FC = (): ReactElement => {
     const showNode = useRef<any>(null)
 
     const handleChange = useCallback((e: any): void => {
-        setLine(e.target.value.split('\n'))
         setValue(e.target.value)
     }, [])
 
@@ -57,6 +56,7 @@ const MarkdownEditor: FC = (): ReactElement => {
 
     useEffect(()=>{
         if(renderTimer) clearTimeout(renderTimer);
+        setLine(editorNode.current.value.split('\n'))
         renderTimer = setTimeout(() => {
             setHtmlString(md.render(value))
             clearTimeout(renderTimer)
@@ -65,7 +65,11 @@ const MarkdownEditor: FC = (): ReactElement => {
 
     return (
         <MarkdownEditContainer>
-            <NavBar/>
+            <NavBar
+                value={value}
+                setValue={setValue}
+                editorElement={editorNode.current}
+            />
             <div className="markdown-main">
                 <div className="line-container" ref={lineNode}>
                     {
@@ -77,6 +81,7 @@ const MarkdownEditor: FC = (): ReactElement => {
                     }
                 </div>
                 <textarea  
+                    value={value}
                     className="markdown-editor"
                     ref={editorNode}
                     onChange={handleChange}
