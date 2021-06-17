@@ -1,1 +1,1 @@
-export { default as MarkdownEditor } from './components/react-markdown-editor/index.tsx'
+export { default as MarkdownEditor } from './react-markdown-editor/index.tsx'
