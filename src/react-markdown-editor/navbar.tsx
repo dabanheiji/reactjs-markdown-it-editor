@@ -1,16 +1,20 @@
-import React, { FC, ReactElement, useCallback, useState, useEffect } from 'react'
+import React, { FC, ReactElement, useCallback, useState, useEffect, useMemo } from 'react'
 import { NavBarContainer } from './style'
 import {
-    BoldOutlined
+    BoldOutlined, ItalicOutlined, StrikethroughOutlined, FontSizeOutlined,
+    UnorderedListOutlined, OrderedListOutlined, LinkOutlined, PictureOutlined,
+    TableOutlined 
 } from '@ant-design/icons'
-import { message, Tooltip } from 'antd'
+import { message, Tooltip, Menu, Dropdown } from 'antd'
 import {
-    handleText
+    handleText, addTitle, addList, addLink, addPhoto, addTable
 } from './utils'
 import { IProps } from './type'
 
-const codeThemeList = ['default','hybrid', 'dark', 'github', 'atelier-lakeside-dark', 'color-brewer', 'docco', 'mono-blue', 'paraiso-dark']
-const markdownThemeList = ['maize', 'guthub']
+const { Item, ItemGroup } = Menu
+
+// const codeThemeList = ['default','hybrid', 'dark', 'github', 'atelier-lakeside-dark', 'color-brewer', 'docco', 'mono-blue', 'paraiso-dark']
+// const markdownThemeList = ['maize', 'guthub']
 
 const NavBar: FC<IProps> = ({
     value,
@@ -59,14 +63,52 @@ const NavBar: FC<IProps> = ({
         head.appendChild(newLink)
     }, [codeTheme])
 
-    
+    const TitleMenu = (
+        <Menu onClick={(a: any)=>addTitle(editorElement, a.key, a.domEvent.target.innerText, setValue)}>
+            <Item key="#">一级标题</Item>
+            <Item key="##">二级标题</Item>
+            <Item key="###">三级标题</Item>
+            <Item key="####">四级标题</Item>
+            <Item key="#####">五级标题</Item>
+            <Item key="######">六级标题</Item>
+        </Menu>
+    )
+
+
 
     return (
         <NavBarContainer>
             <Tooltip title="加粗">
                 <BoldOutlined className="item" onClick={()=>handleText(editorElement, '**', '加粗文本', setValue)} />
             </Tooltip>
-            
+            <Tooltip title="斜体">
+                <ItalicOutlined className="item" onClick={()=>handleText(editorElement, '*', '斜体文本', setValue)} />
+            </Tooltip>
+            <Tooltip title="中划线">
+                <StrikethroughOutlined className="item" onClick={()=>handleText(editorElement, '~~', '中划线', setValue)}  />
+            </Tooltip>
+            <Dropdown
+                overlay={TitleMenu}
+                placement="bottomCenter" 
+                arrow
+            >
+                <FontSizeOutlined className="item" />
+            </Dropdown>
+            <Tooltip title="无序列表">
+                <UnorderedListOutlined className="item" onClick={()=>addList(editorElement, '-', setValue)} />
+            </Tooltip>
+            <Tooltip title="有序列表">
+                <OrderedListOutlined className="item" onClick={()=>addList(editorElement, '1.', setValue)} />
+            </Tooltip>
+            <Tooltip title="超链接">
+                <LinkOutlined className="item" onClick={()=>addLink(editorElement, setValue)} />
+            </Tooltip>
+            <Tooltip title="图片">
+                <PictureOutlined className="item" onClick={()=>addPhoto(editorElement, setValue)} />
+            </Tooltip>
+            <Tooltip title="表格">
+                <TableOutlined className="item" onClick={()=>addTable(editorElement, setValue)} />
+            </Tooltip>
         </NavBarContainer>
     )
 }

@@ -17,6 +17,7 @@ export const MarkdownEditContainer = styled.div`
             background: #272727;
             padding-top: 0px;
             box-sizing: border-box;
+            display: none;
             .line-num{
                 width: 100%;
                 text-align: center;
@@ -26,7 +27,7 @@ export const MarkdownEditContainer = styled.div`
             }
         }
         .markdown-editor{
-            width: calc( 50% - 48px );
+            width: calc( 50% );
             height: 100%;
             border: none;
             outline: none;
@@ -57,7 +58,23 @@ export const NavBarContainer = styled.nav`
     align-items: center;
     padding: 0 20px;
     .item{
-        font-size: 24px;
-        color: #ccc;
+        cursor: pointer;
+        margin-right: 8px;
+        padding: 5px;
+        font-size: 17px;
+        border-radius: 3px;
+
+        &:hover {
+            background-color: #eee;
+        }
+
+        &.code {
+            padding: 5px 0;
+        }
+    }
+
+    .right {
+        flex: 1;
+        text-align: right;
     }
 `
