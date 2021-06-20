@@ -9,6 +9,23 @@ export const getCursorPosition = (el: HTMLTextAreaElement): number[] => {
 }
 
 /**
+ * 获取焦点，并设置选中的文本
+ * 
+ * @param el HTMLTextAreaElement
+ * @param selectionStart number
+ * @param selectionEnd number
+ */
+export const setSelectionRange = (el: HTMLTextAreaElement, selectionStart: number, selectionEnd: number): void => {
+    let timer = setTimeout(()=>{
+        let { scrollTop } = el;
+        el.focus();
+        el.scrollTop = scrollTop;
+        el.setSelectionRange(selectionStart, selectionEnd)
+        timer && clearInterval(timer)
+    }, 0)
+}
+
+/**
  * 添加加粗、斜体、中划线的方法
  * @param el HTMLTextAreaElement
  * @param symbol string
@@ -20,7 +37,10 @@ export const handleText = (el: HTMLTextAreaElement, symbol: string, txt: string,
     let value = start === end 
         ? `${el.value.slice(0, start)}\n${symbol}${txt}${symbol}\n${el.value.slice(end)}`
         : `${el.value.slice(0, start)}${symbol}${el.value.slice(start, end)}${symbol}${el.value.slice(end)}`;
+    let selectionStart = start === end ? start + symbol.length + 1 : start + symbol.length;
+    let selectionEnd = start === end ? selectionStart + txt.length : end + symbol.length;
     setValue(value)
+    setSelectionRange(el, selectionStart, selectionEnd)
 }
 
 /**
@@ -35,7 +55,10 @@ export const addTitle = (el: HTMLTextAreaElement, symbol: string, txt: string, s
     let value = start === end
         ? `${el.value.slice(0, start)}\n${symbol} ${txt}\n${el.value.slice(end)}`
         : `${el.value.slice(0, start)}\n${symbol} ${el.value.slice(start, end)}\n${el.value.slice(end)}`;
+    let selectionStart = start + symbol.length + 2;
+    let selectionEnd = start === end ? selectionStart + txt.length : end + symbol.length + 1
     setValue(value)
+    setSelectionRange(el, selectionStart, selectionEnd)
 }
 
 /**
@@ -54,7 +77,10 @@ export const addList = (el: HTMLTextAreaElement, symbol: string, setValue: (str:
     let value = flag
         ? `${el.value.slice(0, activeStart)}${symbol} ${el.value.slice(activeStart)}`
         : `${el.value.slice(0, activeStart)}${symbol} ${el.value.slice(activeStart, end).replace(/\n/g, `\n${symbol} `)}${el.value.slice(end)}`
+    let selectionStart = activeStart + symbol.length + 1;
+    let selectionEnd = selectionStart;
     setValue(value)
+    setSelectionRange(el, selectionStart, selectionEnd)
 }
 
 /**
@@ -65,9 +91,12 @@ export const addList = (el: HTMLTextAreaElement, symbol: string, setValue: (str:
 export const addLink = (el: HTMLTextAreaElement, setValue: (str: string) => void): void => {
     const [start, end] = getCursorPosition(el)
     let value = start === end 
-        ? `${el.value.slice(0, start)}\n [链接文字](http://dabanheiji.com) \n${el.value.slice(end)}`
-        : `${el.value.slice(0, start)}[${el.value.slice(start, end)}](http://dabanheiji.com)${el.value.slice(end)}`;
+        ? `${el.value.slice(0, start)}[链接文字](url)${el.value.slice(end)}`
+        : `${el.value.slice(0, start)}[${el.value.slice(start, end)}](url)${el.value.slice(end)}`;
+    let selectionStart = start === end ? start + 7 : end + 3;
+    let selectionEnd = start === end ? end + 10 : end + 6;
     setValue(value);
+    setSelectionRange(el, selectionStart, selectionEnd)
 }
 
 /**
@@ -78,9 +107,12 @@ export const addLink = (el: HTMLTextAreaElement, setValue: (str: string) => void
 export const addPhoto = (el: HTMLTextAreaElement, setValue: (str: string)=>void): void => {
     const [start, end] = getCursorPosition(el)
     let value = start === end 
-        ? `${el.value.slice(0, start)}\n ![image](http://cpyfiles.dabanheiji.com/2021_04_05_08_15_51179858reactjs.png) \n${el.value.slice(end)}`
-        : `${el.value.slice(0, start)}![${el.value.slice(start, end)}](http://cpyfiles.dabanheiji.com/2021_04_05_08_15_51179858reactjs.png)${el.value.slice(end)}`;
+        ? `${el.value.slice(0, start)}\n![image](url)\n${el.value.slice(end)}`
+        : `${el.value.slice(0, start)}\n![${el.value.slice(start, end)}](url)\n${el.value.slice(end)}`;
+    let selectionStart = start === end ? start + 10 : end + 5;
+    let selectionEnd = start === end ? end + 13 : end + 8;
     setValue(value);
+    setSelectionRange(el, selectionStart, selectionEnd)
 }
 
 /**
@@ -107,13 +139,24 @@ export const addTable = (el: HTMLTextAreaElement,setValue: (str: string)=>void, 
         }
     }
     let value = `${el.value.slice(0, start)}\n${tableStr}\n${el.value.slice(end)}`
+    let selectionStart = start + 2;
+    let selectionEnd = start === end ? selectionStart + 3 : selectionStart + end - start;
     setValue(value)
+    setSelectionRange(el, selectionStart, selectionEnd)
 }
 
+/**
+ * 添加代码块
+ * @param el HTMLTextAreaElement
+ * @param setValue (str: string)=>void
+ */
 export const addCode = (el: HTMLTextAreaElement, setValue: (str: string)=>void): void => {
     const [start, end] = getCursorPosition(el);
     let value = start === end 
-        ? `${el.value.slice(0, start)}\n\`\`\`\n\`\`\`\n${el.value.slice(end)}`
+        ? `${el.value.slice(0, start)}\n\`\`\`\n\n\`\`\`\n${el.value.slice(end)}`
         : `${el.value.slice(0, start)}\n\`\`\`\n${el.value.slice(start, end)}\n\`\`\`\n${el.value.slice(end)}`
+    let selectionStart = start + 5;
+    let selectionEnd = selectionStart;
     setValue(value)
+    setSelectionRange(el, selectionStart, selectionEnd)
 }
