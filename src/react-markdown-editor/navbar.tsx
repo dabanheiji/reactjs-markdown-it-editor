@@ -3,11 +3,11 @@ import { NavBarContainer } from './style'
 import {
     BoldOutlined, ItalicOutlined, StrikethroughOutlined, FontSizeOutlined,
     UnorderedListOutlined, OrderedListOutlined, LinkOutlined, PictureOutlined,
-    TableOutlined 
+    TableOutlined, CodeOutlined, EllipsisOutlined, CarryOutOutlined 
 } from '@ant-design/icons'
 import { message, Tooltip, Menu, Dropdown } from 'antd'
 import {
-    handleText, addTitle, addList, addLink, addPhoto, addTable
+    handleText, addTitle, addList, addLink, addPhoto, addTable, addCode
 } from './utils'
 import { IProps } from './type'
 
@@ -100,6 +100,9 @@ const NavBar: FC<IProps> = ({
             <Tooltip title="有序列表">
                 <OrderedListOutlined className="item" onClick={()=>addList(editorElement, '1.', setValue)} />
             </Tooltip>
+            <Tooltip title="任务列表">
+                <CarryOutOutlined className="item" />
+            </Tooltip>
             <Tooltip title="超链接">
                 <LinkOutlined className="item" onClick={()=>addLink(editorElement, setValue)} />
             </Tooltip>
@@ -109,6 +112,11 @@ const NavBar: FC<IProps> = ({
             <Tooltip title="表格">
                 <TableOutlined className="item" onClick={()=>addTable(editorElement, setValue)} />
             </Tooltip>
+            <Tooltip title="代码块">
+                <CodeOutlined className="item" onClick={()=>addCode(editorElement, setValue)} />
+            </Tooltip>
+
+            <EllipsisOutlined className="item" />
         </NavBarContainer>
     )
 }

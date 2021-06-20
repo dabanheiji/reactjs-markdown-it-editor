@@ -90,7 +90,7 @@ export const addPhoto = (el: HTMLTextAreaElement, setValue: (str: string)=>void)
  * @param row number
  * @param col number
  */
-export const addTable = (el: HTMLTextAreaElement,setValue: (str: string)=>void, row: number = 2, col: number = 2): void => {
+export const addTable = (el: HTMLTextAreaElement,setValue: (str: string)=>void, row: number = 2, col: number = 3): void => {
     const [start, end] = getCursorPosition(el);
     let tableStr: string = ``;
     for(let i = 0; i < row; i++){
@@ -106,7 +106,14 @@ export const addTable = (el: HTMLTextAreaElement,setValue: (str: string)=>void, 
             tableStr += `\n`
         }
     }
-    console.log(tableStr)
     let value = `${el.value.slice(0, start)}\n${tableStr}\n${el.value.slice(end)}`
+    setValue(value)
+}
+
+export const addCode = (el: HTMLTextAreaElement, setValue: (str: string)=>void): void => {
+    const [start, end] = getCursorPosition(el);
+    let value = start === end 
+        ? `${el.value.slice(0, start)}\n\`\`\`\n\`\`\`\n${el.value.slice(end)}`
+        : `${el.value.slice(0, start)}\n\`\`\`\n${el.value.slice(start, end)}\n\`\`\`\n${el.value.slice(end)}`
     setValue(value)
 }
