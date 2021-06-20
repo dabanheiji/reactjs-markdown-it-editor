@@ -44,7 +44,7 @@ export const MarkdownEditContainer = styled.div`
             height: 100%;
             padding: 20px;
             box-sizing: border-box;
-            overflow: scroll;
+            overflow-y: scroll;
         }
     }
 `
