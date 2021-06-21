@@ -2,6 +2,9 @@ import React, { FC, ReactElement, useState, useRef, useCallback, useEffect } fro
 import { MarkdownEditContainer } from './style'
 import NavBar from './navbar'
 import md from './markdown'
+import {
+    Spin
+} from 'antd'
 import 'antd/dist/antd.css';
 
 let scrolling: 0 | 1 | 2 = 0;
@@ -13,6 +16,7 @@ const MarkdownEditor: FC = (): ReactElement => {
     const [value, setValue] = useState<string>('')
     const [htmlString, setHtmlString] = useState<string>('')
     const [line, setLine] = useState<string[]>([''])
+    const [loading, setLoading] = useState<boolean>(true)
 
     const lineNode = useRef<any>(null)
     const editorNode = useRef<any>(null)
@@ -73,33 +77,40 @@ const MarkdownEditor: FC = (): ReactElement => {
                 value={value}
                 setValue={setValue}
                 editorElement={editorNode.current}
+                setLoading={setLoading}
             />
-            <div className="markdown-main">
-                <div className="line-container" ref={lineNode}>
-                    {
-                        line.map((item, index) => {
-                            return (
-                                <p className="line-num" key={index}>{ index+1 }</p>
-                            )
-                        })
-                    }
+            <Spin
+                size="large"
+                spinning={loading}
+                wrapperClassName="spining"
+            >
+                <div className="markdown-main">
+                    <div className="line-container" ref={lineNode}>
+                        {
+                            line.map((item, index) => {
+                                return (
+                                    <p className="line-num" key={index}>{ index+1 }</p>
+                                )
+                            })
+                        }
+                    </div>
+                    <textarea
+                        value={value}
+                        className="markdown-editor"
+                        ref={editorNode}
+                        onChange={handleChange}
+                        onScroll={haneleScroll}
+                        onKeyDown={handleKeyDown}
+                    />
+                    <div 
+                        className="markdown-preview markdown-body" 
+                        id="write"
+                        ref={showNode}
+                        onScroll={haneleScroll}
+                        dangerouslySetInnerHTML={{__html: htmlString}}
+                    ></div>
                 </div>
-                <textarea
-                    value={value}
-                    className="markdown-editor"
-                    ref={editorNode}
-                    onChange={handleChange}
-                    onScroll={haneleScroll}
-                    onKeyDown={handleKeyDown}
-                />
-                <div 
-                    className="markdown-preview markdown-body" 
-                    id="write"
-                    ref={showNode}
-                    onScroll={haneleScroll}
-                    dangerouslySetInnerHTML={{__html: htmlString}}
-                ></div>
-            </div>
+            </Spin>
         </MarkdownEditContainer>
     )
 }

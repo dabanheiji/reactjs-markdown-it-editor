@@ -15,16 +15,17 @@ const { Item, ItemGroup } = Menu
 
 const codeThemeList = ['default','hybrid', 'dark', 'github', 'atelier-lakeside-dark', 'color-brewer', 'docco', 'mono-blue', 'paraiso-dark']
 // const markdownThemeList = ['maize', 'guthub']
+let style: any;
 
 const NavBar: FC<IProps> = ({
     value,
     setValue,
-    editorElement
+    editorElement,
+    setLoading
 }): ReactElement => {
     
     const [codeTheme, setCodeTheme] = useState<string>('hybrid')
     const [markdownTheme, setMarkdownTheme] = useState<string>('guthub')
-    const [loading, setLoading] = useState<boolean>(false)
 
     useEffect(() => {
         let head = document.head
@@ -36,7 +37,7 @@ const NavBar: FC<IProps> = ({
         newLink.setAttribute('rel', 'stylesheet')
         newLink.setAttribute('type', 'text/css')
         newLink.setAttribute('class', 'markdownTheme-style-link')
-        newLink.setAttribute('href', `http://cpyfiles.dabanheiji.com/github.css`)
+        newLink.setAttribute('href', `http://cpyfiles.dabanheiji.com/github-markdown.css`)
         newLink.onload = () => setLoading(false);
         newLink.onerror = () => {
             setLoading(false);
@@ -46,6 +47,7 @@ const NavBar: FC<IProps> = ({
     }, [markdownTheme])
 
     useEffect(()=>{
+        setLoading(true)
         let head = document.head;
         let oldLink = head.getElementsByClassName('highlightjs-style-link')
         if(oldLink.length) head.removeChild(oldLink[0])
@@ -61,6 +63,21 @@ const NavBar: FC<IProps> = ({
             message.error('主题获取失败，请稍后重试或尝试其它主题')
         }
         head.appendChild(newLink)
+        style && head.removeChild(style);
+        let color: string = `#1d1f21`
+        if( codeTheme === 'default' || codeTheme === 'github' || codeTheme === 'color-brewer' || codeTheme === 'docco' || codeTheme === 'mono-blue' ) {
+            color = `#f6f8fa`
+        };
+        style = document.createElement('style')
+        style.textContent = `
+        .markdown-body .highlight pre, .markdown-body pre{
+            background-color: ${color} !important;
+        }
+        .spining .ant-spin-container{
+            height: 100%;
+        }
+        `
+        head.appendChild(style)
     }, [codeTheme])
 
     const TitleMenu = (
@@ -80,7 +97,7 @@ const NavBar: FC<IProps> = ({
                 {
                     codeThemeList.map((item, index) => {
                         return (
-                            <Item key={item}>{item}</Item>
+                            <Item key={item} className={codeTheme === item ? `active` : ''}>{item}</Item>
                         )
                     })
                 }

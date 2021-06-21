@@ -6,8 +6,11 @@ export const MarkdownEditContainer = styled.div`
     div, p{
         box-sizing: border-box;
     }
-    .markdown-main{
+    .spining{
         height: calc( 100% - 50px );
+    }
+    .markdown-main{
+        height: 100%;
         display: flex;
         padding: 0;
         .line-container{
@@ -72,7 +75,10 @@ export const NavBarContainer = styled.nav`
             padding: 5px 0;
         }
     }
-
+    .active{
+        background: rgba(0, 255, 255, .5);
+        border: 1px solid rgb(0, 255, 255);
+    }
     .right {
         flex: 1;
         text-align: right;
