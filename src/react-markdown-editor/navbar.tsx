@@ -3,7 +3,7 @@ import { NavBarContainer } from './style'
 import {
     BoldOutlined, ItalicOutlined, StrikethroughOutlined, FontSizeOutlined,
     UnorderedListOutlined, OrderedListOutlined, LinkOutlined, PictureOutlined,
-    TableOutlined, CodeOutlined, EllipsisOutlined, CarryOutOutlined 
+    TableOutlined, CodeOutlined, EllipsisOutlined, CarryOutOutlined, BulbOutlined 
 } from '@ant-design/icons'
 import { message, Tooltip, Menu, Dropdown } from 'antd'
 import {
@@ -13,7 +13,7 @@ import { IProps } from './type'
 
 const { Item, ItemGroup } = Menu
 
-// const codeThemeList = ['default','hybrid', 'dark', 'github', 'atelier-lakeside-dark', 'color-brewer', 'docco', 'mono-blue', 'paraiso-dark']
+const codeThemeList = ['default','hybrid', 'dark', 'github', 'atelier-lakeside-dark', 'color-brewer', 'docco', 'mono-blue', 'paraiso-dark']
 // const markdownThemeList = ['maize', 'guthub']
 
 const NavBar: FC<IProps> = ({
@@ -36,7 +36,7 @@ const NavBar: FC<IProps> = ({
         newLink.setAttribute('rel', 'stylesheet')
         newLink.setAttribute('type', 'text/css')
         newLink.setAttribute('class', 'markdownTheme-style-link')
-        newLink.setAttribute('href', `https://cdn.bootcdn.net/ajax/libs/primer-markdown/4.1.0-alpha.e45cefe1/build.min.css`)
+        newLink.setAttribute('href', `http://cpyfiles.dabanheiji.com/github.css`)
         newLink.onload = () => setLoading(false);
         newLink.onerror = () => {
             setLoading(false);
@@ -74,6 +74,19 @@ const NavBar: FC<IProps> = ({
         </Menu>
     )
 
+    const CodeMenu = (
+        <Menu onClick={(e)=>setCodeTheme(e.key)}>
+            <ItemGroup title="代码块风格">
+                {
+                    codeThemeList.map((item, index) => {
+                        return (
+                            <Item key={item}>{item}</Item>
+                        )
+                    })
+                }
+            </ItemGroup>
+        </Menu>
+    )
 
 
     return (
@@ -115,7 +128,13 @@ const NavBar: FC<IProps> = ({
             <Tooltip title="代码块">
                 <CodeOutlined className="item" onClick={()=>addCode(editorElement, setValue)} />
             </Tooltip>
-
+            <Dropdown
+                overlay={CodeMenu}
+                placement="bottomCenter" 
+                arrow
+            >
+                <BulbOutlined className="item" />
+            </Dropdown>
             <EllipsisOutlined className="item" />
         </NavBarContainer>
     )

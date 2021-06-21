@@ -9,8 +9,19 @@ export const getCursorPosition = (el: HTMLTextAreaElement): number[] => {
 }
 
 /**
+ * 处理尾部多余的换行符
+ * @param str string
+ * @returns string
+ */
+export const clearEndNullText = (str: string): string => {
+    let arr = str.split('\n').reverse();
+    let index = arr.findIndex(item => item.length > 0) - 1;
+    arr.splice(0, index);
+    return arr.reverse().join('\n');
+}
+
+/**
  * 获取焦点，并设置选中的文本
- * 
  * @param el HTMLTextAreaElement
  * @param selectionStart number
  * @param selectionEnd number
@@ -39,6 +50,7 @@ export const handleText = (el: HTMLTextAreaElement, symbol: string, txt: string,
         : `${el.value.slice(0, start)}${symbol}${el.value.slice(start, end)}${symbol}${el.value.slice(end)}`;
     let selectionStart = start === end ? start + symbol.length + 1 : start + symbol.length;
     let selectionEnd = start === end ? selectionStart + txt.length : end + symbol.length;
+    value = clearEndNullText(value)
     setValue(value)
     setSelectionRange(el, selectionStart, selectionEnd)
 }
@@ -56,7 +68,8 @@ export const addTitle = (el: HTMLTextAreaElement, symbol: string, txt: string, s
         ? `${el.value.slice(0, start)}\n${symbol} ${txt}\n${el.value.slice(end)}`
         : `${el.value.slice(0, start)}\n${symbol} ${el.value.slice(start, end)}\n${el.value.slice(end)}`;
     let selectionStart = start + symbol.length + 2;
-    let selectionEnd = start === end ? selectionStart + txt.length : end + symbol.length + 1
+    let selectionEnd = start === end ? selectionStart + txt.length : end + symbol.length + 1;
+    value = clearEndNullText(value)
     setValue(value)
     setSelectionRange(el, selectionStart, selectionEnd)
 }
@@ -79,6 +92,7 @@ export const addList = (el: HTMLTextAreaElement, symbol: string, setValue: (str:
         : `${el.value.slice(0, activeStart)}${symbol} ${el.value.slice(activeStart, end).replace(/\n/g, `\n${symbol} `)}${el.value.slice(end)}`
     let selectionStart = activeStart + symbol.length + 1;
     let selectionEnd = selectionStart;
+    value = clearEndNullText(value)
     setValue(value)
     setSelectionRange(el, selectionStart, selectionEnd)
 }
@@ -95,6 +109,7 @@ export const addLink = (el: HTMLTextAreaElement, setValue: (str: string) => void
         : `${el.value.slice(0, start)}[${el.value.slice(start, end)}](url)${el.value.slice(end)}`;
     let selectionStart = start === end ? start + 7 : end + 3;
     let selectionEnd = start === end ? end + 10 : end + 6;
+    value = clearEndNullText(value)
     setValue(value);
     setSelectionRange(el, selectionStart, selectionEnd)
 }
@@ -111,6 +126,7 @@ export const addPhoto = (el: HTMLTextAreaElement, setValue: (str: string)=>void)
         : `${el.value.slice(0, start)}\n![${el.value.slice(start, end)}](url)\n${el.value.slice(end)}`;
     let selectionStart = start === end ? start + 10 : end + 5;
     let selectionEnd = start === end ? end + 13 : end + 8;
+    value = clearEndNullText(value)
     setValue(value);
     setSelectionRange(el, selectionStart, selectionEnd)
 }
@@ -141,6 +157,7 @@ export const addTable = (el: HTMLTextAreaElement,setValue: (str: string)=>void, 
     let value = `${el.value.slice(0, start)}\n${tableStr}\n${el.value.slice(end)}`
     let selectionStart = start + 2;
     let selectionEnd = start === end ? selectionStart + 3 : selectionStart + end - start;
+    value = clearEndNullText(value)
     setValue(value)
     setSelectionRange(el, selectionStart, selectionEnd)
 }
@@ -157,6 +174,7 @@ export const addCode = (el: HTMLTextAreaElement, setValue: (str: string)=>void):
         : `${el.value.slice(0, start)}\n\`\`\`\n${el.value.slice(start, end)}\n\`\`\`\n${el.value.slice(end)}`
     let selectionStart = start + 5;
     let selectionEnd = selectionStart;
+    value = clearEndNullText(value)
     setValue(value)
     setSelectionRange(el, selectionStart, selectionEnd)
 }
