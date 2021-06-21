@@ -86,7 +86,7 @@ export const addList = (el: HTMLTextAreaElement, symbol: string, setValue: (str:
 /**
  * 添加超链接
  * @param el HTMLTextAreaElement
- * @param setValue (str: string) => void): void
+ * @param setValue (str: string) => void
  */
 export const addLink = (el: HTMLTextAreaElement, setValue: (str: string) => void): void => {
     const [start, end] = getCursorPosition(el)
@@ -102,7 +102,7 @@ export const addLink = (el: HTMLTextAreaElement, setValue: (str: string) => void
 /**
  * 添加图片
  * @param el HTMLTextAreaElement
- * @param setValue (str: string) => void): void
+ * @param setValue str: string) => void
  */
 export const addPhoto = (el: HTMLTextAreaElement, setValue: (str: string)=>void): void => {
     const [start, end] = getCursorPosition(el)

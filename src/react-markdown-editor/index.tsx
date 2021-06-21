@@ -54,6 +54,10 @@ const MarkdownEditor: FC = (): ReactElement => {
         return scrollTop / (scrollHeight - clientHeight)
     }, [])
 
+    const handleKeyDown = useCallback((e: any): void => {
+        console.log(e)
+    }, [])
+
     useEffect(()=>{
         if(renderTimer) clearTimeout(renderTimer);
         setLine(editorNode.current.value.split('\n'))
@@ -80,12 +84,13 @@ const MarkdownEditor: FC = (): ReactElement => {
                         })
                     }
                 </div>
-                <textarea  
+                <textarea
                     value={value}
                     className="markdown-editor"
                     ref={editorNode}
                     onChange={handleChange}
                     onScroll={haneleScroll}
+                    onKeyDown={handleKeyDown}
                 />
                 <div 
                     className="markdown-preview markdown-body" 
