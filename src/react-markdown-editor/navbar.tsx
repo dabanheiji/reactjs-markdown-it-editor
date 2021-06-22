@@ -9,7 +9,7 @@ import { message, Tooltip, Menu, Dropdown } from 'antd'
 import {
     handleText, addTitle, addList, addLink, addPhoto, addTable, addCode
 } from './utils'
-import { IProps } from './type'
+import { INavProps } from './type'
 
 const { Item, ItemGroup } = Menu
 
@@ -17,7 +17,7 @@ const codeThemeList = ['default','hybrid', 'dark', 'github', 'atelier-lakeside-d
 // const markdownThemeList = ['maize', 'guthub']
 let style: any;
 
-const NavBar: FC<IProps> = ({
+const NavBar: FC<INavProps> = ({
     value,
     setValue,
     editorElement,
@@ -25,7 +25,6 @@ const NavBar: FC<IProps> = ({
 }): ReactElement => {
     
     const [codeTheme, setCodeTheme] = useState<string>('hybrid')
-    const [markdownTheme, setMarkdownTheme] = useState<string>('guthub')
 
     useEffect(() => {
         let head = document.head
@@ -44,7 +43,7 @@ const NavBar: FC<IProps> = ({
             message.error('主题获取失败，请稍后重试或尝试其它主题')
         }
         head.appendChild(newLink)
-    }, [markdownTheme])
+    }, [])
 
     useEffect(()=>{
         setLoading(true)
@@ -76,6 +75,10 @@ const NavBar: FC<IProps> = ({
         .spining .ant-spin-container{
             height: 100%;
         }
+        .code-highlight-theme-menu .active, .markdown-theme-menu .active {
+            background-color: rgb(225, 248, 222);
+            border-radius: 3px;
+        }
         `
         head.appendChild(style)
     }, [codeTheme])
@@ -93,7 +96,7 @@ const NavBar: FC<IProps> = ({
 
     const CodeMenu = (
         <Menu onClick={(e)=>setCodeTheme(e.key)}>
-            <ItemGroup title="代码块风格">
+            <ItemGroup title="代码块风格" className="item-group-list-container code-highlight-theme-menu">
                 {
                     codeThemeList.map((item, index) => {
                         return (
@@ -125,10 +128,10 @@ const NavBar: FC<IProps> = ({
                 <FontSizeOutlined className="item" />
             </Dropdown>
             <Tooltip title="无序列表">
-                <UnorderedListOutlined className="item" onClick={()=>addList(editorElement, '-', setValue)} />
+                <UnorderedListOutlined className="item" onClick={()=>addList(editorElement, '- ', setValue)} />
             </Tooltip>
             <Tooltip title="有序列表">
-                <OrderedListOutlined className="item" onClick={()=>addList(editorElement, '1.', setValue)} />
+                <OrderedListOutlined className="item" onClick={()=>addList(editorElement, '1. ', setValue)} />
             </Tooltip>
             <Tooltip title="任务列表">
                 <CarryOutOutlined className="item" />
