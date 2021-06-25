@@ -5,8 +5,8 @@ import md from './markdown'
 import {
     Spin
 } from 'antd';
-import { IHistory, IKeyCodeMap } from './type'
-import { getCursorPosition, setSelectionRange, addList } from './utils'
+import { IHistory, IKeyCodeMap, IProps } from './type'
+import { getCursorPosition, setSelectionRange, addList, cancelTabSpace } from './utils'
 import 'antd/dist/antd.css';
 
 let scrolling: 0 | 1 | 2 = 0;
@@ -15,7 +15,13 @@ let renderTimer: any;
 let history: IHistory = { value: '', pre: null, next: null, selectionStart: 0, selectionEnd: 0 }
 let historyTimer: any;
 
-const MarkdownEditor: FC = (): ReactElement => {
+const config = {
+    tabSpace: 4
+}
+
+const MarkdownEditor: FC<IProps> = ({
+    initialValue = ''
+}): ReactElement => {
 
     const [value, setValue] = useState<string>('')
     const [htmlString, setHtmlString] = useState<string>('')
@@ -64,7 +70,8 @@ const MarkdownEditor: FC = (): ReactElement => {
 
     const handleKeyDown = useCallback((e: any): void => {
         let { keyCode, metaKey, ctrlKey, altKey, shiftKey } = e;
-        const [start, end] = getCursorPosition(e.target)
+        const el = e.target
+        const [start, end] = getCursorPosition(el)
         if(ctrlKey){
             switch(keyCode){
                 case IKeyCodeMap.ctrlZ:
@@ -86,14 +93,14 @@ const MarkdownEditor: FC = (): ReactElement => {
                 default:
                     break
             }
+        }else if(shiftKey){
+            if(keyCode === IKeyCodeMap.tab){
+                cancelTabSpace(el, config.tabSpace, wrapSetValue)
+                e.preventDefault()
+            }
         }else{
             if(keyCode === IKeyCodeMap.tab){
-                start === end ? 
-                (
-                    wrapSetValue(`${e.target.value.slice(0, start)}${' '.repeat(4)}${e.target.value.slice(end)}`) 
-                )
-                : 
-                addList(e.target, ' '.repeat(4), wrapSetValue);
+                addList(el, ' '.repeat(config.tabSpace), wrapSetValue, 2)
                 e.preventDefault()
             }
         }
@@ -116,7 +123,6 @@ const MarkdownEditor: FC = (): ReactElement => {
                 selectionEnd: end
             }
             history = history.next
-            console.log(history.pre)
             clearTimeout(historyTimer)
         }, 1000)
     }
@@ -129,6 +135,13 @@ const MarkdownEditor: FC = (): ReactElement => {
             clearTimeout(renderTimer)
         }, 200)
     },[value])
+
+    useEffect(()=>{
+        history.value = initialValue;
+        setValue(initialValue)
+        let len = initialValue.length;
+        setSelectionRange(editorNode.current, len, len)
+    }, [])
 
     return (
         <MarkdownEditContainer>

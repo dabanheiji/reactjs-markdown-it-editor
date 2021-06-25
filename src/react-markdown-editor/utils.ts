@@ -41,9 +41,9 @@ export const setSelectionRange = (el: HTMLTextAreaElement, selectionStart: numbe
  * @param el HTMLTextAreaElement
  * @param symbol string
  * @param txt string
- * @param setValue (str: string)=>void
+ * @param setValue Function
  */
-export const handleText = (el: HTMLTextAreaElement, symbol: string, txt: string, setValue: (str: string)=>void): void => {
+export const handleText = (el: HTMLTextAreaElement, symbol: string, txt: string, setValue: Function): void => {
     const [start, end] = getCursorPosition(el)
     let value = start === end 
         ? `${el.value.slice(0, start)}\n${symbol}${txt}${symbol}\n${el.value.slice(end)}`
@@ -60,9 +60,9 @@ export const handleText = (el: HTMLTextAreaElement, symbol: string, txt: string,
  * @param el HTMLTextAreaElement
  * @param symbol string
  * @param txt string
- * @param setValue (str: string)=>void
+ * @param setValue Function
  */
-export const addTitle = (el: HTMLTextAreaElement, symbol: string, txt: string, setValue: (str: string)=>void): void => {
+export const addTitle = (el: HTMLTextAreaElement, symbol: string, txt: string, setValue: Function): void => {
     const [start, end] = getCursorPosition(el)
     let value = start === end
         ? `${el.value.slice(0, start)}\n${symbol} ${txt}\n${el.value.slice(end)}`
@@ -75,23 +75,56 @@ export const addTitle = (el: HTMLTextAreaElement, symbol: string, txt: string, s
 }
 
 /**
- * 添加有序列表、无序列表
+ * 添加有序列表、无序列表, tab缩进
  * @param el HTMLTextAreaElement
  * @param symbol string
  * @param txt string
- * @param setValue (str: string)=>void
+ * @param setValue Function
+ * @param type 1 | 2  1: 有序、无序列表  2: 其他，如tab缩进
  */
-export const addList = (el: HTMLTextAreaElement, symbol: string, setValue: (str: string) => void): void => {
+export const addList = (el: HTMLTextAreaElement, symbol: string, setValue: (str: string) => void, type: 1 | 2 = 1): void => {
     const [start, end] = getCursorPosition(el)
-    let activeStart: number = start, flag: boolean = start === end;
+    let paragraph: string[] = el.value.split('\n'),
+        activeStart: number = start, 
+        flag: boolean = start === end, 
+        value: string = ``,
+        selectionStart: number = start,
+        selectionEnd: number = end,
+        len: number = paragraph.length,
+        stringCount:number = 0,
+        addSpaceCount: number = 0;
+
     activeStart = el.value.slice(0, start).lastIndexOf('\n') === -1 ? 0 : el.value.slice(0, start).lastIndexOf('\n')
-    activeStart = activeStart === 0 ? 0 : activeStart + 1
-    
-    let value = flag
-        ? `${el.value.slice(0, activeStart)}${symbol}${el.value.slice(activeStart)}`
-        : `${el.value.slice(0, activeStart)}${symbol}${el.value.slice(activeStart, end).replace(/\n/g, `\n${symbol}`)}${el.value.slice(end)}`
-    let selectionStart = start + symbol.length;
-    let selectionEnd = start === end ? selectionStart : selectionStart + (el.value.slice(start, end).split('\n').length + 1) * (symbol.length) + 1;
+    activeStart = activeStart === 0 ? 0 : activeStart + 1;
+
+    if(flag){
+        if(type === 1){
+            value = `${el.value.slice(0, activeStart)}${symbol}${el.value.slice(activeStart)}`
+        }else if(type === 2){
+            value = `${el.value.slice(0, start)}${symbol}${el.value.slice(end)}`
+        }
+        selectionStart += symbol.length;
+        selectionEnd += symbol.length;
+    }else{
+        for(let i = 0; i < len; i++){
+            let item = paragraph[i],
+                nextStringCount =  stringCount + item.length + 1;
+
+            if(nextStringCount > start && stringCount < end){
+                let newItem = `${symbol}${item}`;
+                addSpaceCount += symbol.length;
+                paragraph[i] = newItem;
+                if(start > stringCount) selectionStart += symbol.length;
+                if(nextStringCount > end) selectionEnd += addSpaceCount;
+            }else if(stringCount > end){
+                break;
+            }
+
+            stringCount = nextStringCount;
+        }
+
+        value = paragraph.join('\n')
+    }
     value = clearEndNullText(value)
     setValue(value)
     setSelectionRange(el, selectionStart, selectionEnd)
@@ -100,9 +133,9 @@ export const addList = (el: HTMLTextAreaElement, symbol: string, setValue: (str:
 /**
  * 添加超链接
  * @param el HTMLTextAreaElement
- * @param setValue (str: string) => void
+ * @param setValue Function
  */
-export const addLink = (el: HTMLTextAreaElement, setValue: (str: string) => void): void => {
+export const addLink = (el: HTMLTextAreaElement, setValue: Function): void => {
     const [start, end] = getCursorPosition(el)
     let value = start === end 
         ? `${el.value.slice(0, start)}[链接文字](url)${el.value.slice(end)}`
@@ -117,9 +150,9 @@ export const addLink = (el: HTMLTextAreaElement, setValue: (str: string) => void
 /**
  * 添加图片
  * @param el HTMLTextAreaElement
- * @param setValue str: string) => void
+ * @param setValue Function
  */
-export const addPhoto = (el: HTMLTextAreaElement, setValue: (str: string)=>void): void => {
+export const addPhoto = (el: HTMLTextAreaElement, setValue: Function): void => {
     const [start, end] = getCursorPosition(el)
     let value = start === end 
         ? `${el.value.slice(0, start)}\n![image](url)\n${el.value.slice(end)}`
@@ -134,11 +167,11 @@ export const addPhoto = (el: HTMLTextAreaElement, setValue: (str: string)=>void)
 /**
  * 添加表格
  * @param el HTMLTextAreaElement
- * @param setValue (str: string)=>void
+ * @param setValue Function
  * @param row number
  * @param col number
  */
-export const addTable = (el: HTMLTextAreaElement,setValue: (str: string)=>void, row: number = 2, col: number = 3): void => {
+export const addTable = (el: HTMLTextAreaElement,setValue: Function, row: number = 2, col: number = 3): void => {
     const [start, end] = getCursorPosition(el);
     let tableStr: string = ``;
     for(let i = 0; i < row; i++){
@@ -165,9 +198,9 @@ export const addTable = (el: HTMLTextAreaElement,setValue: (str: string)=>void, 
 /**
  * 添加代码块
  * @param el HTMLTextAreaElement
- * @param setValue (str: string)=>void
+ * @param setValue Function
  */
-export const addCode = (el: HTMLTextAreaElement, setValue: (str: string)=>void): void => {
+export const addCode = (el: HTMLTextAreaElement, setValue: Function): void => {
     const [start, end] = getCursorPosition(el);
     let value = start === end 
         ? `${el.value.slice(0, start)}\n\`\`\`\n\n\`\`\`\n${el.value.slice(end)}`
@@ -175,6 +208,56 @@ export const addCode = (el: HTMLTextAreaElement, setValue: (str: string)=>void):
     let selectionStart = start + 5;
     let selectionEnd = selectionStart;
     value = clearEndNullText(value)
+    setValue(value)
+    setSelectionRange(el, selectionStart, selectionEnd)
+}
+
+/**
+ * shift + tab 清楚段落最开始的空字符
+ * @param el HTMLTextAreaElement
+ * @param tabSpaceCount number
+ * @param setValue Function
+ */
+export const cancelTabSpace = (el: HTMLTextAreaElement, tabSpaceCount: number, setValue: Function): void => {
+    const [start, end] = getCursorPosition(el);
+    let paragraph: string[] = el.value.split('\n'),
+        selectionStart: number = start,
+        selectionEnd: number = end,
+        value: string = ``,
+        stringCount: number = 0,
+        cancelSpaceCount: number = 0,
+        len: number = paragraph.length;
+
+    for(let i = 0; i < len; i++){
+        let item = paragraph[i]
+        let nextStringCount = stringCount + item.length + 1
+
+        if(nextStringCount > start && stringCount < end){
+            let spaces = item.split(' '.repeat(tabSpaceCount))
+            if(spaces.length !== 1 && spaces[0]  === ""){
+                spaces.shift();
+                cancelSpaceCount += tabSpaceCount
+            }else{
+                let oldlen =  spaces[0].length
+                spaces[0] = spaces[0].trimLeft();
+                let newlen = spaces[0].length
+                cancelSpaceCount += (oldlen - newlen)
+            }
+
+            let newParagraph = spaces.join(' '.repeat(tabSpaceCount))
+            paragraph[i] = newParagraph
+
+            if(start > stringCount) selectionStart -= item.length - newParagraph.length;
+            if(end < nextStringCount) selectionEnd -= cancelSpaceCount;
+        }else if(stringCount > end){
+            break;
+        }
+
+        stringCount = nextStringCount
+    }
+
+    value = paragraph.join('\n')
+
     setValue(value)
     setSelectionRange(el, selectionStart, selectionEnd)
 }
