@@ -133,9 +133,9 @@ const NavBar: FC<INavProps> = ({
             <Tooltip title="有序列表">
                 <OrderedListOutlined className="item" onClick={()=>addList(editorElement, '1. ', setValue)} />
             </Tooltip>
-            <Tooltip title="任务列表">
+            {/* <Tooltip title="任务列表">
                 <CarryOutOutlined className="item" />
-            </Tooltip>
+            </Tooltip> */}
             <Tooltip title="超链接">
                 <LinkOutlined className="item" onClick={()=>addLink(editorElement, setValue)} />
             </Tooltip>

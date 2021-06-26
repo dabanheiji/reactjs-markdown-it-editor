@@ -1,3 +1,7 @@
+export interface IProps {
+    initialValue: string,
+}
+
 export interface INavProps {
     value: string,
     setValue: (str: string) => void,
@@ -16,5 +20,5 @@ export interface IHistory {
 export enum IKeyCodeMap {
     ctrlZ = 90,
     ctrlY = 89,
-    tab = 9
+    tab = 9,
 }
