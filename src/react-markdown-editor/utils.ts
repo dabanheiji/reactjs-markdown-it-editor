@@ -91,7 +91,10 @@ export const addList = (el: HTMLTextAreaElement, symbol: string, setValue: (str:
         ? `${el.value.slice(0, activeStart)}${symbol}${el.value.slice(activeStart)}`
         : `${el.value.slice(0, activeStart)}${symbol}${el.value.slice(activeStart, end).replace(/\n/g, `\n${symbol}`)}${el.value.slice(end)}`
     let selectionStart = start + symbol.length;
-    let selectionEnd = start === end ? selectionStart : selectionStart + (el.value.slice(start, end).split('\n').length + 1) * (symbol.length) + 1;
+    let selectionEnd = start === end ? selectionStart : selectionStart + (el.value.slice(start, end).split('\n').length + 1) * (symbol.length + 1) - 1;
+    console.log(start, end)
+    console.log(selectionStart, selectionEnd)
+    console.log(el.value.length, value.length)
     value = clearEndNullText(value)
     setValue(value)
     setSelectionRange(el, selectionStart, selectionEnd)
