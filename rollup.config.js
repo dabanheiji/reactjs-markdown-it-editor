@@ -11,5 +11,5 @@ export default {
         babel(),
         typescript()
     ],
-    external: ['react', '@ant-design/icons', 'antd', 'styled-components', 'react-dom']
+    external: ['react', '@ant-design/icons']
 }

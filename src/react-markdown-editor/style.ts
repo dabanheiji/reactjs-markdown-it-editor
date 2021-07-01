@@ -40,7 +40,12 @@ export const MarkdownEditContainer = styled.div`
             font-size: 16px;
             padding: 0 20px 0;
             line-height: 26px;
-            color: #cccccc;
+            color: #69c0ff;
+            transition: width .5s;
+            &.hide{
+                width: 0;
+                padding: 0;
+            }
         }
         .markdown-preview{
             width: 50%;
@@ -48,6 +53,10 @@ export const MarkdownEditContainer = styled.div`
             padding: 20px;
             box-sizing: border-box;
             overflow-y: scroll;
+            transition: width .5s;
+            &.prev{
+                width: 100%;
+            }
         }
     }
 `

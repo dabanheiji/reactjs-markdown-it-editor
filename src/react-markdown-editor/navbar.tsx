@@ -3,7 +3,7 @@ import { NavBarContainer } from './style'
 import {
     BoldOutlined, ItalicOutlined, StrikethroughOutlined, FontSizeOutlined,
     UnorderedListOutlined, OrderedListOutlined, LinkOutlined, PictureOutlined,
-    TableOutlined, CodeOutlined, EllipsisOutlined, CarryOutOutlined, BulbOutlined 
+    TableOutlined, CodeOutlined, EllipsisOutlined, BulbOutlined, ExpandOutlined, CompressOutlined  
 } from '@ant-design/icons'
 import { message, Tooltip, Menu, Dropdown } from 'antd'
 import {
@@ -18,10 +18,11 @@ const codeThemeList = ['default','hybrid', 'dark', 'github', 'atelier-lakeside-d
 let style: any;
 
 const NavBar: FC<INavProps> = ({
-    value,
     setValue,
     editorElement,
-    setLoading
+    setLoading,
+    preview,
+    setPreview
 }): ReactElement => {
     
     const [codeTheme, setCodeTheme] = useState<string>('hybrid')
@@ -155,7 +156,15 @@ const NavBar: FC<INavProps> = ({
             >
                 <BulbOutlined className="item" />
             </Dropdown>
-            <EllipsisOutlined className="item" />
+            {false && <EllipsisOutlined className="item" />}
+            <div className="right">
+                {
+                    preview ? 
+                    <CompressOutlined  className="item" onClick={()=>setPreview(false)} />
+                    :
+                    <ExpandOutlined className="item" onClick={()=>setPreview(true)}  />
+                }
+            </div>
         </NavBarContainer>
     )
 }

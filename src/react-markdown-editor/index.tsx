@@ -6,7 +6,10 @@ import {
     Spin
 } from 'antd';
 import { IHistory, IKeyCodeMap, IProps } from './type'
-import { getCursorPosition, setSelectionRange, addList, cancelTabSpace } from './utils'
+import {
+    getCursorPosition, setSelectionRange, addList, cancelTabSpace, handleText,
+    clickEnter, autoComplementBracket
+} from './utils'
 import 'antd/dist/antd.css';
 
 let scrolling: 0 | 1 | 2 = 0;
@@ -27,6 +30,7 @@ const MarkdownEditor: FC<IProps> = ({
     const [htmlString, setHtmlString] = useState<string>('')
     const [line, setLine] = useState<string[]>([''])
     const [loading, setLoading] = useState<boolean>(true)
+    const [preview, setPreview] = useState<boolean>(false)
 
     const lineNode = useRef<any>(null)
     const editorNode = useRef<any>(null)
@@ -69,9 +73,9 @@ const MarkdownEditor: FC<IProps> = ({
     }, [])
 
     const handleKeyDown = useCallback((e: any): void => {
-        let { keyCode, metaKey, ctrlKey, altKey, shiftKey } = e;
+        let { keyCode, ctrlKey, altKey, shiftKey } = e;
         const el = e.target
-        const [start, end] = getCursorPosition(el)
+        // console.log(keyCode)
         if(ctrlKey){
             switch(keyCode){
                 case IKeyCodeMap.ctrlZ:
@@ -90,28 +94,68 @@ const MarkdownEditor: FC<IProps> = ({
                     setSelectionRange(editorNode.current, selectionStart, selectionEnd)
                     e.preventDefault()
                     break
+                case IKeyCodeMap.ctrlB:
+                    handleText(editorNode.current, '**', '加粗文本', wrapSetValue)
+                    e.preventDefault()
+                    break
+                case IKeyCodeMap.ctrlI:
+                    handleText(editorNode.current, '*', '斜体文本', wrapSetValue)
+                    e.preventDefault()
+                    break
                 default:
                     break
             }
         }else if(shiftKey){
-            if(keyCode === IKeyCodeMap.tab){
-                cancelTabSpace(el, config.tabSpace, wrapSetValue)
-                e.preventDefault()
+            switch(keyCode){
+                case IKeyCodeMap.tab:
+                    cancelTabSpace(el, config.tabSpace, wrapSetValue)
+                    e.preventDefault()
+                    break
+                case IKeyCodeMap.shift9:
+                    autoComplementBracket(el, wrapSetValue, ['(', ')'])
+                    e.preventDefault()
+                    break
+                case IKeyCodeMap.shiftArrayBracket:
+                    autoComplementBracket(el, wrapSetValue, ['{', '}'])
+                    e.preventDefault()
+                    break
+                case IKeyCodeMap.oneMark:
+                    autoComplementBracket(el, wrapSetValue, ['\"', '\"'])
+                    e.preventDefault()
+                    break
+                default:
+                    break
             }
         }else{
-            if(keyCode === IKeyCodeMap.tab){
-                addList(el, ' '.repeat(config.tabSpace), wrapSetValue, 2)
-                e.preventDefault()
+            switch(keyCode){
+                case IKeyCodeMap.tab:
+                    addList(el, ' '.repeat(config.tabSpace), wrapSetValue, 2)
+                    e.preventDefault()
+                    break
+                case IKeyCodeMap.enter:
+                    clickEnter(el, wrapSetValue, config.tabSpace)
+                    e.preventDefault()
+                    break
+                case IKeyCodeMap.shiftArrayBracket:
+                    autoComplementBracket(el, wrapSetValue, ['[', ']'])
+                    e.preventDefault()
+                    break
+                case IKeyCodeMap.oneMark:
+                    autoComplementBracket(el, wrapSetValue, ['\'', '\''])
+                    e.preventDefault()
+                    break
+                default:
+                    break
             }
         }
     }, [])
 
-    const wrapSetValue = (value: string): void => {
+    const wrapSetValue = (value: string, selectionStart : null | number = null, selectionEnd : null | number = null): void => {
         setValue(value)
-        setHistory()
+        setHistory(selectionStart, selectionEnd)
     }
 
-    const setHistory = ()=>{
+    const setHistory = (selectionStart : null | number, selectionEnd : null | number): void => {
         const [start, end] = getCursorPosition(editorNode.current)
         if(historyTimer) clearTimeout(historyTimer);
         historyTimer = setTimeout(()=>{
@@ -119,13 +163,14 @@ const MarkdownEditor: FC<IProps> = ({
                 value: editorNode.current.value,
                 pre: history,
                 next: null,
-                selectionStart: start,
-                selectionEnd: end
+                selectionStart: selectionStart ? selectionStart : start,
+                selectionEnd: selectionEnd ? selectionEnd : end
             }
             history = history.next
             clearTimeout(historyTimer)
         }, 1000)
     }
+
 
     useEffect(()=>{
         if(renderTimer) clearTimeout(renderTimer);
@@ -146,7 +191,8 @@ const MarkdownEditor: FC<IProps> = ({
     return (
         <MarkdownEditContainer>
             <NavBar
-                value={value}
+                preview={preview}
+                setPreview={setPreview}
                 setValue={wrapSetValue}
                 editorElement={editorNode.current}
                 setLoading={setLoading}
@@ -168,14 +214,14 @@ const MarkdownEditor: FC<IProps> = ({
                     </div>
                     <textarea
                         value={value}
-                        className="markdown-editor"
+                        className={`markdown-editor ${preview ? 'hide' : ''}`}
                         ref={editorNode}
                         onChange={handleChange}
                         onScroll={haneleScroll}
                         onKeyDown={handleKeyDown}
                     />
                     <div 
-                        className="markdown-preview markdown-body" 
+                        className={`markdown-preview markdown-body ${preview ? 'prev' : ''}`} 
                         id="write"
                         ref={showNode}
                         onScroll={haneleScroll}
