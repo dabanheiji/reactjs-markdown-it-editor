@@ -1,5 +1,7 @@
 export interface IProps {
     initialValue: string,
+    onChange: (value: string, htmlText: string) => void,
+    tabSpace: number,
 }
 
 export interface INavProps {

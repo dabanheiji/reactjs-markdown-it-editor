@@ -1,7 +1,7 @@
 /**
  * 获取输入框选中文本的开始与结束的下标
- * @param el HTMLTextAreaElement
- * @returns number[]
+ * @param {HTMLTextAreaElement} el 
+ * @returns {number[]}
  */
 export const getCursorPosition = (el: HTMLTextAreaElement): number[] => {
     const { selectionStart, selectionEnd } = el
@@ -10,8 +10,8 @@ export const getCursorPosition = (el: HTMLTextAreaElement): number[] => {
 
 /**
  * 处理尾部多余的换行符
- * @param str string
- * @returns string
+ * @param {string} str 
+ * @returns {string}
  */
 export const clearEndNullText = (str: string): string => {
     let arr = str.split('\n').reverse();
@@ -22,9 +22,9 @@ export const clearEndNullText = (str: string): string => {
 
 /**
  * 获取焦点，并设置选中的文本
- * @param el HTMLTextAreaElement
- * @param selectionStart number
- * @param selectionEnd number
+ * @param {HTMLTextAreaElement} el 
+ * @param {number} selectionStart 
+ * @param {number} selectionEnd 
  */
 export const setSelectionRange = (el: HTMLTextAreaElement, selectionStart: number, selectionEnd: number): void => {
     let timer = setTimeout(()=>{
@@ -38,10 +38,10 @@ export const setSelectionRange = (el: HTMLTextAreaElement, selectionStart: numbe
 
 /**
  * 添加加粗、斜体、中划线的方法
- * @param el HTMLTextAreaElement
- * @param symbol string
- * @param txt string
- * @param setValue Function
+ * @param {HTMLTextAreaElement} el 
+ * @param {string} symbol 
+ * @param {string} txt 
+ * @param {Function} setValue 
  */
 export const handleText = (el: HTMLTextAreaElement, symbol: string, txt: string, setValue: Function): void => {
     const [start, end] = getCursorPosition(el)
@@ -57,10 +57,10 @@ export const handleText = (el: HTMLTextAreaElement, symbol: string, txt: string,
 
 /**
  * 添加标题
- * @param el HTMLTextAreaElement
- * @param symbol string
- * @param txt string
- * @param setValue Function
+ * @param {HTMLTextAreaElement} el 
+ * @param {string} symbol 
+ * @param {string} txt 
+ * @param {Function} setValue 
  */
 export const addTitle = (el: HTMLTextAreaElement, symbol: string, txt: string, setValue: Function): void => {
     const [start, end] = getCursorPosition(el)
@@ -76,11 +76,11 @@ export const addTitle = (el: HTMLTextAreaElement, symbol: string, txt: string, s
 
 /**
  * 添加有序列表、无序列表, tab缩进
- * @param el HTMLTextAreaElement
- * @param symbol string
- * @param txt string
- * @param setValue Function
- * @param type 1 | 2  1: 有序、无序列表  2: 其他，如tab缩进
+ * @param {HTMLTextAreaElement} el 
+ * @param {string} symbol 
+ * @param {string} txt 
+ * @param {Function} setValue 
+ * @param {1 | 2} type  1: 有序、无序列表  2: 其他，如tab缩进
  */
 export const addList = (el: HTMLTextAreaElement, symbol: string, setValue: Function, type: 1 | 2 = 1): void => {
     const [start, end] = getCursorPosition(el)
@@ -132,8 +132,8 @@ export const addList = (el: HTMLTextAreaElement, symbol: string, setValue: Funct
 
 /**
  * 添加超链接
- * @param el HTMLTextAreaElement
- * @param setValue Function
+ * @param {HTMLTextAreaElement} el 
+ * @param {Function} setValue 
  */
 export const addLink = (el: HTMLTextAreaElement, setValue: Function): void => {
     const [start, end] = getCursorPosition(el)
@@ -149,8 +149,8 @@ export const addLink = (el: HTMLTextAreaElement, setValue: Function): void => {
 
 /**
  * 添加图片
- * @param el HTMLTextAreaElement
- * @param setValue Function
+ * @param {HTMLTextAreaElement} el 
+ * @param {Function} setValue 
  */
 export const addPhoto = (el: HTMLTextAreaElement, setValue: Function): void => {
     const [start, end] = getCursorPosition(el)
@@ -166,10 +166,10 @@ export const addPhoto = (el: HTMLTextAreaElement, setValue: Function): void => {
 
 /**
  * 添加表格
- * @param el HTMLTextAreaElement
- * @param setValue Function
- * @param row number
- * @param col number
+ * @param {HTMLTextAreaElement} el 
+ * @param {Function} setValue 
+ * @param {number} row 
+ * @param {number} col 
  */
 export const addTable = (el: HTMLTextAreaElement,setValue: Function, row: number = 2, col: number = 3): void => {
     const [start, end] = getCursorPosition(el);
@@ -197,8 +197,8 @@ export const addTable = (el: HTMLTextAreaElement,setValue: Function, row: number
 
 /**
  * 添加代码块
- * @param el HTMLTextAreaElement
- * @param setValue Function
+ * @param {HTMLTextAreaElement} el 
+ * @param {Function} setValue 
  */
 export const addCode = (el: HTMLTextAreaElement, setValue: Function): void => {
     const [start, end] = getCursorPosition(el);
@@ -214,9 +214,9 @@ export const addCode = (el: HTMLTextAreaElement, setValue: Function): void => {
 
 /**
  * shift + tab 清除段落最开始的空字符
- * @param el HTMLTextAreaElement
- * @param tabSpaceCount number
- * @param setValue Function
+ * @param {HTMLTextAreaElement} el 
+ * @param {number} tabSpaceCount 
+ * @param {Function} setValue 
  */
 export const cancelTabSpace = (el: HTMLTextAreaElement, tabSpaceCount: number, setValue: Function): void => {
     const [start, end] = getCursorPosition(el);
@@ -264,9 +264,9 @@ export const cancelTabSpace = (el: HTMLTextAreaElement, tabSpaceCount: number, s
 
 /**
  * 重写按下回车执行的操作
- * @param el HTMLTextAreaElement
- * @param setValue Function
- * @param tabSpace number
+ * @param {HTMLTextAreaElement} el 
+ * @param {Function} setValue 
+ * @param {number} tabSpace 
  */
 export const clickEnter = (el: HTMLTextAreaElement, setValue: Function, tabSpace: number): void => {
     const [start, end] = getCursorPosition(el);
@@ -304,10 +304,10 @@ export const clickEnter = (el: HTMLTextAreaElement, setValue: Function, tabSpace
 }
 
 /**
- * 自动补全括号 () [] {}
- * @param el HTMLTextAreaElement
- * @param setValue Function
- * @param bracket string[]
+ * 自动补全括号、引号 () [] {} '' ""
+ * @param {HTMLTextAreaElement} el 
+ * @param {Function} setValue 
+ * @param {string[]} bracket 
  */
 export const autoComplementBracket = (el: HTMLTextAreaElement, setValue: Function, bracket: string[])=>{
     const [start, end] = getCursorPosition(el)
@@ -330,9 +330,9 @@ export const autoComplementBracket = (el: HTMLTextAreaElement, setValue: Functio
 
 /**
  * 获取光标所在行前面的tab字符
- * @param el HTMLTextAreaElement
- * @param tabSpace number
- * @returns string
+ * @param {HTMLTextAreaElement} el 
+ * @param {number} tabSpace 
+ * @returns {string}
  */
 const getActiveLineBeginSpaces = (el: HTMLTextAreaElement, tabSpace: number): string => {
     const [start, end] = getCursorPosition(el)

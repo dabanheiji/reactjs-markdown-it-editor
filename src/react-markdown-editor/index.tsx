@@ -1,4 +1,4 @@
-import React, { FC, ReactElement, useState, useRef, useCallback, useEffect } from 'react'
+import React, { FC, ReactElement, useState, useRef, useCallback, useEffect, memo } from 'react'
 import { MarkdownEditContainer } from './style'
 import NavBar from './navbar'
 import md from './markdown'
@@ -18,12 +18,11 @@ let renderTimer: any;
 let history: IHistory = { value: '', pre: null, next: null, selectionStart: 0, selectionEnd: 0 }
 let historyTimer: any;
 
-const config = {
-    tabSpace: 4
-}
 
 const MarkdownEditor: FC<IProps> = ({
-    initialValue = ''
+    initialValue = '',
+    onChange = ()=>{},
+    tabSpace = 4
 }): ReactElement => {
 
     const [value, setValue] = useState<string>('')
@@ -37,6 +36,7 @@ const MarkdownEditor: FC<IProps> = ({
     const showNode = useRef<any>(null)
 
     const handleChange = useCallback((e: any): void => {
+        onChange(e.target.value, md.render(e.target.value))
         wrapSetValue(e.target.value)
     }, [])
 
@@ -95,11 +95,11 @@ const MarkdownEditor: FC<IProps> = ({
                     e.preventDefault()
                     break
                 case IKeyCodeMap.ctrlB:
-                    handleText(editorNode.current, '**', '加粗文本', wrapSetValue)
+                    handleText(editorNode.current, '**', '', wrapSetValue)
                     e.preventDefault()
                     break
                 case IKeyCodeMap.ctrlI:
-                    handleText(editorNode.current, '*', '斜体文本', wrapSetValue)
+                    handleText(editorNode.current, '*', '', wrapSetValue)
                     e.preventDefault()
                     break
                 default:
@@ -108,7 +108,7 @@ const MarkdownEditor: FC<IProps> = ({
         }else if(shiftKey){
             switch(keyCode){
                 case IKeyCodeMap.tab:
-                    cancelTabSpace(el, config.tabSpace, wrapSetValue)
+                    cancelTabSpace(el, tabSpace, wrapSetValue)
                     e.preventDefault()
                     break
                 case IKeyCodeMap.shift9:
@@ -129,11 +129,11 @@ const MarkdownEditor: FC<IProps> = ({
         }else{
             switch(keyCode){
                 case IKeyCodeMap.tab:
-                    addList(el, ' '.repeat(config.tabSpace), wrapSetValue, 2)
+                    addList(el, ' '.repeat(tabSpace), wrapSetValue, 2)
                     e.preventDefault()
                     break
                 case IKeyCodeMap.enter:
-                    clickEnter(el, wrapSetValue, config.tabSpace)
+                    clickEnter(el, wrapSetValue, tabSpace)
                     e.preventDefault()
                     break
                 case IKeyCodeMap.shiftArrayBracket:
@@ -203,7 +203,7 @@ const MarkdownEditor: FC<IProps> = ({
                 wrapperClassName="spining"
             >
                 <div className="markdown-main">
-                    <div className="line-container" ref={lineNode}>
+                    {/* <div className="line-container" ref={lineNode}>
                         {
                             line.map((item, index) => {
                                 return (
@@ -211,7 +211,7 @@ const MarkdownEditor: FC<IProps> = ({
                                 )
                             })
                         }
-                    </div>
+                    </div> */}
                     <textarea
                         value={value}
                         className={`markdown-editor ${preview ? 'hide' : ''}`}
@@ -233,4 +233,4 @@ const MarkdownEditor: FC<IProps> = ({
     )
 }
 
-export default MarkdownEditor
+export default memo(MarkdownEditor)
