@@ -1,6 +1,6 @@
 {
   "name": "reactjs-markdown-it-editor",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "main": "es/index.js",
   "repository": "git@github.com:dabanheiji/react-markdown-editor.git",
   "author": "dabanheiji1 <834451960@qq.com>",

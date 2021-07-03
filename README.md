@@ -1,4 +1,4 @@
-# react-markdown-it-editor
+# reactjs-markdown-it-editor
 
 一个基于`react`框架开发的`markdown`编辑器组件，此组件是从[零一大佬的编辑器组件源码](https://github.com/zero2one3/markdown-editor-reactjs)中找到的开发思路，并有多处借鉴。需要注意本编辑器依赖`antd`组件库，故需要保证项目中已下载`antd`，编辑器大小默认为父元素的`100%`。
 
