@@ -1,6 +1,24 @@
 # react-markdown-it-editor
 
-一个基于`react`框架开发的`markdown`编辑器组件，此组件是从[零一大佬的编辑器组件源码](https://github.com/zero2one3/markdown-editor-reactjs)中找到的开发思路，并有多处借鉴。
+一个基于`react`框架开发的`markdown`编辑器组件，此组件是从[零一大佬的编辑器组件源码](https://github.com/zero2one3/markdown-editor-reactjs)中找到的开发思路，并有多处借鉴。需要注意本编辑器依赖`antd`组件库，故需要保证项目中已下载`antd`，编辑器大小默认为父元素的`100%`。
+
+初次编写组件包，其中还有些许`bug`，后续作者会慢慢优化
+
+```
+yarn add reactjs-markdown-it-editor
+```
+
+```js
+import MarkdownEditor from 'reactjs-markdown-it-editor'
+
+const Index => {
+    return (
+        <div style={{ width: '100vw', height: '100vh' }}>
+            <MarkdownEditor/>
+        </div>
+    )
+}
+```
 
 ## 快捷键
 

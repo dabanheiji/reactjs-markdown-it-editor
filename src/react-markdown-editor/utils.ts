@@ -70,8 +70,8 @@ export const addTitle = (el: HTMLTextAreaElement, symbol: string, txt: string, s
     let selectionStart = start + symbol.length + 2;
     let selectionEnd = start === end ? selectionStart + txt.length : end + symbol.length + 1;
     value = clearEndNullText(value)
-    setValue(value, selectionStart, selectionEnd)
     setSelectionRange(el, selectionStart, selectionEnd)
+    setValue(value, selectionStart, selectionEnd)
 }
 
 /**
@@ -126,8 +126,8 @@ export const addList = (el: HTMLTextAreaElement, symbol: string, setValue: Funct
         value = paragraph.join('\n')
     }
     value = clearEndNullText(value);
-    setValue(value, selectionStart, selectionEnd)
     setSelectionRange(el, selectionStart, selectionEnd)
+    setValue(value, selectionStart, selectionEnd)
 }
 
 /**
@@ -143,8 +143,8 @@ export const addLink = (el: HTMLTextAreaElement, setValue: Function): void => {
     let selectionStart = start === end ? start + 7 : end + 3;
     let selectionEnd = start === end ? end + 10 : end + 6;
     value = clearEndNullText(value)
-    setValue(value, selectionStart, selectionEnd)
     setSelectionRange(el, selectionStart, selectionEnd)
+    setValue(value, selectionStart, selectionEnd)
 }
 
 /**
@@ -160,8 +160,8 @@ export const addPhoto = (el: HTMLTextAreaElement, setValue: Function): void => {
     let selectionStart = start === end ? start + 10 : end + 5;
     let selectionEnd = start === end ? end + 13 : end + 8;
     value = clearEndNullText(value)
-    setValue(value, selectionStart, selectionEnd)
     setSelectionRange(el, selectionStart, selectionEnd)
+    setValue(value, selectionStart, selectionEnd)
 }
 
 /**
@@ -191,8 +191,8 @@ export const addTable = (el: HTMLTextAreaElement,setValue: Function, row: number
     let selectionStart = start + 2;
     let selectionEnd = start === end ? selectionStart + 3 : selectionStart + end - start;
     value = clearEndNullText(value)
-    setValue(value, selectionStart, selectionEnd)
     setSelectionRange(el, selectionStart, selectionEnd)
+    setValue(value, selectionStart, selectionEnd)
 }
 
 /**
@@ -208,8 +208,8 @@ export const addCode = (el: HTMLTextAreaElement, setValue: Function): void => {
     let selectionStart = start + 5;
     let selectionEnd = selectionStart;
     value = clearEndNullText(value)
-    setValue(value, selectionStart, selectionEnd)
     setSelectionRange(el, selectionStart, selectionEnd)
+    setValue(value, selectionStart, selectionEnd)
 }
 
 /**
@@ -257,9 +257,8 @@ export const cancelTabSpace = (el: HTMLTextAreaElement, tabSpaceCount: number, s
     }
 
     value = paragraph.join('\n')
-
-    setValue(value, selectionStart, selectionEnd)
     setSelectionRange(el, selectionStart, selectionEnd)
+    setValue(value, selectionStart, selectionEnd)
 }
 
 /**
@@ -269,38 +268,40 @@ export const cancelTabSpace = (el: HTMLTextAreaElement, tabSpaceCount: number, s
  * @param {number} tabSpace 
  */
 export const clickEnter = (el: HTMLTextAreaElement, setValue: Function, tabSpace: number): void => {
-    const [start, end] = getCursorPosition(el);
-    let flag = start === end, 
-        value,
-        selectionStart: number = start,
-        selectionEnd: number = end;
-    
-    if(flag){
-        let activeStr = el.value[start-1];
-        const spaceStr = getActiveLineBeginSpaces(el, tabSpace)
+    setTimeout(()=>{
+        const [start, end] = getCursorPosition(el);
+        let flag = start === end, 
+            value,
+            selectionStart: number = start,
+            selectionEnd: number = end;
         
-        if(activeStr === '{'){
-            if(el.value[start] === '}'){
-                value = `${el.value.slice(0, start)}\n${' '.repeat(tabSpace) + spaceStr}\n${spaceStr}${el.value.slice(end)}`
-                selectionStart = start + 1 + tabSpace + spaceStr.length
-                selectionEnd = end + 1 + tabSpace + spaceStr.length
+        if(flag){
+            let activeStr = el.value[start-1];
+            const spaceStr = getActiveLineBeginSpaces(el, tabSpace)
+            
+            if(activeStr === '{'){
+                if(el.value[start] === '}'){
+                    value = `${el.value.slice(0, start)}\n${' '.repeat(tabSpace) + spaceStr}\n${spaceStr}${el.value.slice(end)}`
+                    selectionStart = start + 1 + tabSpace + spaceStr.length
+                    selectionEnd = end + 1 + tabSpace + spaceStr.length
+                }else{
+                    value = `${el.value.slice(0, start)}\n${' '.repeat(tabSpace) + spaceStr}\n${el.value.slice(end).trimLeft()[0] === '}' ? el.value.slice(end) : spaceStr + (el.value.slice(end))}`
+                    selectionStart = start + 1 + tabSpace + spaceStr.length
+                    selectionEnd = end + 1 + tabSpace + spaceStr.length
+                }
             }else{
-                value = `${el.value.slice(0, start)}\n${' '.repeat(tabSpace) + spaceStr}\n${el.value.slice(end).trimLeft()[0] === '}' ? el.value.slice(end) : spaceStr + (el.value.slice(end))}`
-                selectionStart = start + 1 + tabSpace + spaceStr.length
-                selectionEnd = end + 1 + tabSpace + spaceStr.length
+                value = `${el.value.slice(0, start)}\n${spaceStr}${el.value.slice(end)}`
+                selectionStart = start + 1 + spaceStr.length 
+                selectionEnd = end + 1 + spaceStr.length 
             }
         }else{
-            value = `${el.value.slice(0, start)}\n${spaceStr}${el.value.slice(end)}`
-            selectionStart = start + 1 + spaceStr.length 
-            selectionEnd = end + 1 + spaceStr.length 
+            value = `${el.value.slice(0, start)}\n${el.value.slice(end)}`
+            selectionStart = start + 1
+            selectionEnd = start + 1
         }
-    }else{
-        value = `${el.value.slice(0, start)}\n${el.value.slice(end)}`
-        selectionStart = start + 1
-        selectionEnd = start + 1
-    }
-    setValue(value, selectionStart, selectionEnd)
-    setSelectionRange(el, selectionStart, selectionEnd)
+        setSelectionRange(el, selectionStart, selectionEnd)
+        setValue(value, selectionStart, selectionEnd)
+    }, 0)
 }
 
 /**
@@ -324,8 +325,8 @@ export const autoComplementBracket = (el: HTMLTextAreaElement, setValue: Functio
         selectionStart = start + bracket[0].length;
         selectionEnd = end + bracket[0].length;
     }
-    setValue(value, selectionStart, selectionEnd)
     setSelectionRange(el, selectionStart, selectionEnd)
+    setValue(value, selectionStart, selectionEnd)
 }
 
 /**

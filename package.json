@@ -1,9 +1,9 @@
 {
-  "name": "react-markdown-it-editor",
-  "version": "1.0.0",
+  "name": "reactjs-markdown-it-editor",
+  "version": "1.0.1",
   "main": "es/index.js",
   "repository": "git@github.com:dabanheiji/react-markdown-editor.git",
-  "author": "dabanheiji <834451960@qq.com>",
+  "author": "dabanheiji1 <834451960@qq.com>",
   "license": "MIT",
   "scripts": {
     "build": "yarn run rollup -c",
